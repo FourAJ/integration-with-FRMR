@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ registery }} API</title>
+    <link rel="stylesheet" href="../static/css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="../static/css/loader.css" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.js"></script>
+    <script src="../static/js/socketScript.js"></script>
+</head>
+<body>
+<div class="content">
+    <div class="request">
+        <div class="specification">
+            <div class="specification_header">{{ registery }}</div>
+            <div class="specification_rows">
+                <div class="specification_name">
+                    <div>Name</div>
+                </div>
+                <div class="specification_type">
+                    <div>Type</div>
+                </div>
+                <div class="specification_description">
+                    <div>Description</div>
+                </div>
+                <div class="specification_required">
+                    <div>Required</div>
+                </div>
+            </div>
+            {% for spec in specification %}
+                <div class="specification_rows">
+                    <div class="specification_name">
+                        <div>{{ specification[spec]['name'] }}</div>
+                    </div>
+                    <div class="specification_type r_param_type">
+                        <div>{{ specification[spec]['type'] }}</div>
+                    </div>
+                    <div class="specification_description">
+                        <div>{{ specification[spec]['description'] }}</div>
+                    </div>
+                    <div class="specification_required">
+                        <div>{{ specification[spec]['required'] }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% for r in rp %}
+    <div data-request="{{ r }}" class="request">
+        <div data-drop="{{ r }}" class="r_header">
+            <div class="r_left_block">
+                <div class="r_type_get">GET</div>
+                <div id="endpoint" class="r_endpoint">{{ rp[r]['endpoint'] }}</div>
+            </div>
+            <div class="r_right_block">
+                <img data-icon="{{ r }}" src="../static/images/open-close.svg" alt="">
+            </div>
+        </div>
+        <div data-menu="{{ r }}" class="r_content hidden" style="visibility: hidden; position: absolute">
+            <div class="r_params_header">Parameters</div>
+            <div class="r_params">
+                {% for paramType in rp[r]['params'] %}
+                    {% for param in rp[r]['params'][paramType] %}
+                        <div class="r_param_content">
+                            <div class="r_param">
+                                <div class="r_param_name">{{ param }}:</div>
+                                <div class="r_param_type">{{ paramType }}</div>
+                            </div>
+                            <div data-input="{{ param }}" class="r_param_input">
+                                {% if paramType == "str" %}
+                                    <input id="{{ param }}" class="input_class" type="text" autocomplete="off"  placeholder="input">
+                                {% elif paramType == "bool" %}
+                                    <div class="r_param_checkbox" id="{{ param }}">
+                                        <label for="{{ param }}">False</label>
+                                        <input style="visibility: hidden" type="checkbox" id="{{ param }}" value="False">
+                                    </div>
+                                {% elif paramType == "int" %}
+                                    <input id="{{ param }}" class="input_class" autocomplete="off" min="0" type="number" placeholder="input">
+                                {% elif paramType == "date" %}
+                                    <input data-date="{{ param }}" id="{{ param }}" class="input_class" type="text" autocomplete="off"  placeholder="input">
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            <div class="r_execute">
+                <a data-execute="{{ r }}" id="r_execute_btn" class="r_execute_btn">EXECUTE</a>
+            </div>
+            <div class="r_responses_header">Responses</div>
+            <div data-responses="{{ r }}" class="r_responses blur">
+                <div id="urlBlock" class="r_response " style="visibility: hidden; position: absolute">
+                    <div class="r_code">Request URL</div>
+                    <div id="url" class="r_description_url"></div>
+                </div>
+                <div class="r_response">
+                    <div class="r_code">Code</div>
+                    <div class="r_description">Description</div>
+                </div>
+                <div class="r_response">
+                    <div class="r_code">200</div>
+                    <div class="r_description_json">
+                        <pre><code data-json="{{ r }}" id="json200">Ok</code></pre>
+                    </div>
+                </div>
+                <div class="r_response">
+                    <div class="r_code">400</div>
+                    <div class="r_description_json">
+                        <pre><code data-json="{{ r }}" id="json400">Bad request</code></pre>
+                    </div>
+                </div>
+                <div class="r_response">
+                    <div class="r_code">403</div>
+                    <div class="r_description_json">
+                        <pre><code data-json="{{ r }}" id="json403">Forbidden</code></pre>
+                    </div>
+                </div>
+                <div class="r_response">
+                    <div class="r_code">404</div>
+                    <div class="r_description_json">
+                        <pre><code data-json="{{ r }}" id="json404">Not Found</code></pre>
+                    </div>
+                </div>
+                <div class="r_response">
+                    <div class="r_code">500</div>
+                    <div class="r_description_json">
+                        <pre><code data-json="{{ r }}" id="json500">Internal Server Error</code></pre>
+                    </div>
+                </div>
+                <div style="visibility: hidden" class="r_loader" data-loader="{{ r }}">
+                    <div class="loader">
+                        <span class="loader-block"></span>
+                        <span class="loader-block"></span>
+                        <span class="loader-block"></span>
+                        <span class="loader-block"></span>
+                        <span class="loader-block"></span>
+                        <span class="loader-block"></span>
+                        <span class="loader-block"></span>
+                        <span class="loader-block"></span>
+                        <span class="loader-block"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<script>
+    const namespace = "{{ namespace }}";
+</script>
+</body>
+</html>

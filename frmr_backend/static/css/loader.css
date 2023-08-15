@@ -1,0 +1,119 @@
+:root {
+    --blockSize: 2em;
+    /*--blockSize: 6vmin; // Try this in Firefox! Viewport based size, which doesn't work in Canary at the moment*/
+    --delay: 0.065s;
+    --duration: 0.88s;
+    --startingColor: #fdfdfd;
+    --endingColor: #dadada;
+}
+
+@keyframes pulse {
+    from,
+    40% {
+        background: var(--startingColor);
+    }
+    to {
+        background: var(--endingColor);
+    }
+}
+
+@keyframes show {
+    from,
+    40% {
+        opacity: 0;
+    }
+    41%,
+    to {
+        opacity: 1;
+    }
+}
+
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(var(--blockSize) * 3 + var(--blockSize) / 3 * 2);
+    height: calc(var(--blockSize) * 3 + var(--blockSize) / 3 * 2);
+    margin-left: calc(-1 * (var(--blockSize) * 3 + var(--blockSize) / 3 * 2) / 2);
+    margin-top: calc(-1 * (var(--blockSize) * 3 + var(--blockSize) / 3 * 2) / 2);
+    transform: scale(40%);
+}
+
+.loader-block {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    opacity: 0;
+    width: var(--blockSize);
+    height: var(--blockSize);
+    background: var(--startingColor);
+    animation: show var(--duration) step-end infinite alternate, pulse var(--duration) linear infinite alternate;
+}
+
+.loader-block:nth-child(1) {
+    transform: translate(0, 0);
+    animation-delay: calc(1 * var(--delay));
+}
+
+.loader-block:nth-child(2) {
+    transform: translate(calc(var(--blockSize) + var(--blockSize) / 3), 0);
+    animation-delay: calc(2 * var(--delay));
+}
+
+.loader-block:nth-child(3) {
+    transform: translate(calc((var(--blockSize) * 2) + (var(--blockSize) / 3 * 2)), 0);
+    animation-delay: calc(3 * var(--delay));
+}
+
+.loader-block:nth-child(4) {
+    transform: translate(0, calc(var(--blockSize) + var(--blockSize) / 3));
+    animation-delay: calc(5 * var(--delay));
+}
+
+.loader-block:nth-child(5) {
+    transform: translate(calc(var(--blockSize) + var(--blockSize) / 3), calc(var(--blockSize) + var(--blockSize) / 3));
+    animation-delay: calc(2 * var(--delay));
+}
+
+.loader-block:nth-child(6) {
+    transform: translate(calc((var(--blockSize) * 2) + (var(--blockSize) / 3 * 2)), calc(var(--blockSize) + var(--blockSize) / 3));
+    animation-delay: calc(7 * var(--delay));
+}
+
+.loader-block:nth-child(7) {
+    transform: translate(0, calc((var(--blockSize) * 2) + (var(--blockSize) / 3 * 2)));
+    animation-delay: calc(6 * var(--delay));
+}
+
+.loader-block:nth-child(8) {
+    transform: translate(calc(var(--blockSize) + var(--blockSize) / 3), calc((var(--blockSize) * 2) + (var(--blockSize) / 3 * 2)));
+    animation-delay: calc(4 * var(--delay));
+}
+
+.loader-block:nth-child(9) {
+    transform: translate(calc((var(--blockSize) * 2) + (var(--blockSize) / 3 * 2)), calc((var(--blockSize) * 2) + (var(--blockSize) / 3 * 2)));
+    animation-delay: calc(8 * var(--delay));
+}
+
+@keyframes pulse {
+    from,
+    40% {
+        background: var(--startingColor);
+    }
+    to {
+        background: var(--endingColor);
+    }
+}
+
+@keyframes show {
+    from,
+    40% {
+        opacity: 0;
+    }
+    41%,
+    to {
+        opacity: 1;
+    }
+}
